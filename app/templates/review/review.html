@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block p %}
+<div class="hero-content bg-white text-dark p-5 rounded shadow" style="max-width: 600px; margin: auto;">
+    <h2 class="mb-4">Отзыв</h2>
+    <form method="POST">
+        <div class="mb-3">
+            <textarea class="form-control" name="review_text" rows="4" placeholder="Введите ваш отзыв" required></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="rating" class="form-label">оценка (1 до 10)</label>
+            <select name="rating" class="form-control" required>
+            {% for i in range(1, 11) %}
+                <option value="{{ i }}">{{ i }}</option>
+            {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Оставить отзыв</button>
+    </form>
+</div>
+{% endblock %}

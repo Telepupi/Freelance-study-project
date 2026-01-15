@@ -1,0 +1,30 @@
+{% extends "admin/base.html" %}
+
+{% block admin_content %}
+<h3>Пользователи</h3>
+
+<table class="table table-striped shadow-sm">
+<thead>
+<tr>
+  <th>ID</th>
+  <th>Логин</th>
+  <th>Роль</th>
+  <th></th>
+</tr>
+</thead>
+<tbody>
+{% for u in users %}
+<tr>
+  <td>{{ u.user_id }}</td>
+  <td>{{ u.username }}</td>
+  <td>{{ 'Фрилансер' if u.role_id == 1 else 'Заказчик' }}</td>
+  <td>
+    <form method="post" action="{{ url_for('admin.delete_user', user_id=u.user_id) }}">
+      <button class="btn btn-danger btn-sm">Удалить</button>
+    </form>
+  </td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+{% endblock %}

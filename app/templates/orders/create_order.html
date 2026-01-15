@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container my-5" style="max-width: 700px;">
+
+    <div class="card shadow-sm border-0 rounded-3">
+        <div class="card-body p-4">
+
+            <h2 class="fw-bold mb-4 text-center">Создать заказ</h2>
+            <form method="POST">
+
+                <div class="mb-3">
+                    <label for="title" class="form-label fw-semibold">Заголовок</label>
+                    <input
+                        type="text" class="form-control" id="title" name="title" placeholder="Введите заголовок" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Описание заказа</label>
+                    <textarea class="form-control" name="description" rows="5" placeholder="Подробно опишите задачу" required></textarea>
+                </div>
+                <div class="mb-3">
+                <label class="form-label fw-semibold">Категория</label>
+                <select class="form-select" name="category_id" required>
+                <option value="">Выберите категорию</option>
+                {% for cat in category %}
+                    <option value="{{ cat.category_id }}">
+                {{ cat.name }}
+                    </option>
+                {% endfor %}
+                </select>
+                </div>
+                <div class="mb-4">
+                    <label for="budget" class="form-label fw-semibold">Бюджет(руб.)</label>
+                    <input
+                        type="number" class="form-control" id="budget" name="budget" placeholder="Укажите бюджет" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="deadline" class="form-label">Срок выполнения</label>
+                    <input type="date" class="form-control" id="deadline" name="deadline"
+                   min="2025-01-01" max="2026-12-31" required>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2">
+                    <button type="submit" class="btn btn-success px-4">
+                        Создать заказ
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

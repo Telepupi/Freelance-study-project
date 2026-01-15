@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% for cat, msg in get_flashed_messages(True) %}
+    <div class="alert alert-{{ 'danger' if cat == 'error' else 'success' }}">
+        {{ msg }}
+    </div>
+    {% endfor %}
+
+<div class="container-fluid mt-4">
+  <div class="row">
+    <div class="col-2">
+      <div class="list-group shadow-sm">
+        <a href="{{ url_for('admin.admin_users') }}" class="list-group-item">Пользователи</a>
+        <a href="{{ url_for('admin.admin_categories') }}" class="list-group-item">Категории</a>
+        <a href="{{ url_for('admin.admin_orders') }}" class="list-group-item">Заказы</a>
+        <a href="{{ url_for('admin.admin_bids') }}" class="list-group-item">Отклики</a>
+        <a href="{{ url_for('admin.admin_reviews') }}" class="list-group-item">Отзывы</a>
+      </div>
+    </div>
+    <div class="col-10">
+      {% block admin_content %}{% endblock %}
+    </div>
+
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container my-5">
+        <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+        <h2 class="card-title mb-0">{{ order.title }}</h2>
+
+        {% if order.status == 'active' %}
+        <span class="badge bg-primary fs-6">Открыт</span>
+        {% elif order.status == 'in_progress' %}
+        <span class="badge bg-warning text-dark fs-6">Выполняется</span>
+         {% elif order.status == 'under_checking' %}
+        <span class="badge bg-info text-dark fs-6">На проверке</span>
+        {% elif order.status == 'completed' %}
+        <span class="badge bg-success fs-6">Завершён</span>
+        {% elif order.status == 'cancelled' %}
+        <span class="badge bg-danger fs-6">Отменён</span>
+        {% endif %}
+        </div>
+            <span class="badge bg-primary mb-3">
+                {{ category.name}}
+            </span>
+
+            <div class="d-flex flex-wrap gap-3 mb-4">
+                <div class="d-flex align-items-center">
+                    <strong class="me-2">Бюджет:</strong>
+                    <span>{{ order.budget }} ₽</span>
+                </div>
+
+                <div class="d-flex align-items-center">
+                    <strong class="me-2">Срок:</strong>
+                    <span>{{ order.deadline }}</span>
+                </div>
+            </div>
+
+            <h5 class="fw-bold">Описание</h5>
+            <p class="text-muted" style="white-space: pre-line;">
+                {{ order.description }}
+            </p>
+
+             <p class="mb-1">
+            <strong>Исполнитель:</strong>
+            {% if freelancer %}
+            {% if current_user.user_id == order['freelancer_id'] %}
+            <span class="badge bg-success ms-2">
+                Вы выбранный исполнитель!
+            </span>
+            {% else %}
+             {{ freelancer.first_name }} {{ freelancer.last_name }}
+                {% endif %}
+                {% else %}
+                    <span class="text-muted">не выбран, успейте первым!</span>{% endif %}
+            </p>
+            {% if current_user.role_id == 1 and order["status"] == 'active'%}
+                <a href="{{ url_for('bids.create_bid', order_id = order.order_id) }}" class="btn btn-success btn-lg mt-3">
+                    Откликнуться
+                </a>
+            {% elif order["status"] == 'in_progress' and current_user.user_id == order.freelancer_id %}
+                <form method="POST" action="{{ url_for('orders.complete_order', order_id=order.order_id) }}">
+                    <button type="submit" class="btn btn-success btn-lg mt-3">
+                            Завершить выполнение заказа
+                    </button>
+                </form>
+            {% elif current_user.user_id == order["customer_id"] and order["status"] == 'under_checking'%}
+                <form method="POST" action="{{ url_for('orders.close_order', order_id=order.order_id) }}">
+                    <button type="submit" class="btn btn-success btn-lg mt-3">
+                           Подтвердить успешное выполнение заказа
+                    </button>
+                </form>
+            {% elif current_user.role_id == 1 and order["status"] == 'in_progress'%}
+                <p class="btn btn-warning btn-lg mt-3">
+                    Исполнитель уже выбран
+                </p>
+            {% elif order['customer_id'] == current_user.user_id and order['status'] == 'active'%}
+                <a href="{{ url_for('orders.edit_order', order_id = order.order_id )}}" class="btn btn-outline-primary btn-lg mt-3">
+                    Изменить заказ
+                </a>
+            <p>Вы можете изменить заказ только пока исполнитель не назначен</p>
+            {% elif (order['customer_id'] == current_user.user_id or order['freelancer_id'] == current_user.user_id)
+                and order['status'] == 'completed' %}
+                <a href="{{ url_for('reviews.create_review', order_id = order.order_id) }}" class="btn btn-outline-primary btn-lg mt-3">
+                    {% if current_user.role_id == 2%}
+                    Оставить отзыв об исполнителе
+                    {% elif current_user.role_id == 1%}
+                    Оставить отзыв о заказчике
+                    {% endif %}
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card shadow-sm mt-4">
+        <div class="card-body">
+            <h5 class="fw-bold mb-3">Дополнительно</h5>
+            <p class="mb-1"><strong>ID заказа:</strong> {{ order.order_id }}</p>
+            <p class="mb-1"><strong>Размещён:</strong> {{ order.created_at.strftime('%d.%m.%Y %H:%M')}}</p>
+            <p class="mb-1"><strong>Заказчик:</strong>
+                {%if customer['company_name']%}
+                    {{ customer['company_name'] }}
+                {%else%}
+                    Имя заказчика не указано
+                {%endif%}
+                <a href="{{ url_for('profile.profile', username = customer['username']) }}"
+                class="btn btn-outline-primary btn-sm mt-2">
+                Посмотреть профиль
+                </a>
+            </p>
+        </div>
+    </div>
+
+    {% if bids %}
+    <div class="card shadow-sm mt-4">
+    <div class="card-body">
+        <h5 class="fw-bold mb-3">Отклики</h5>
+        {% for bid in bids %}
+        <div class="border rounded p-3 mb-3">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+                <strong class="fs-4">
+                    {{ bid.first_name }} {{ bid.last_name }}
+                </strong>
+
+                <span class="badge bg-secondary">
+                    {%if bid.status == 'pending'%}
+                        На рассмотрении
+                    {%elif bid.status == 'accepted'%}
+                        Выбранный исполнитель
+                    {%endif%}
+                </span>
+
+        </div>
+            {% if current_user.user_id == order['customer_id'] and order['status'] == 'active' %}
+                {% if bid[6] == 'pending' %}
+                <form method="post" action="{{ url_for('bids.accept_bid', bid_id=bid[0]) }}">
+                <button type="submit">Принять отклик</button>
+                </form>
+                {% endif %}
+            {% endif %}
+
+            <p class="mb-2 text-muted" style="white-space: pre-line;">
+                {{ bid.bid_text }}
+            </p>
+
+            <div class="d-flex flex-wrap gap-3">
+                <div>
+                    <strong>Цена:</strong> {{ bid.price }} ₽
+                </div>
+                <div>
+                    <strong>Срок:</strong> {{ bid.deadline }}
+                </div>
+                <a href="{{ url_for('profile.profile', username = bid['username']) }}"
+                class="btn btn-outline-primary btn-sm">Профиль</a>
+            </div>
+
+        </div>
+
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+</div>
+{% endblock %}

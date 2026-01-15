@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Редактировать заказ</h2>
+    <form method="POST">
+        <div class="mb-3">
+            <label for="title" class="form-label">Название</label>
+            <input type="text" class="form-control" id="title" name="title" value="{{ order.title }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="description" class="form-label">Описание</label>
+            <textarea class="form-control" id="description" name="description" rows="4" required>{{ order.description }}</textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="budget" class="form-label">Бюджет</label>
+            <input type="number" class="form-control" id="budget" name="budget" value="{{ order.budget }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="deadline" class="form-label">Срок выполнения</label>
+            <input type="date" class="form-control" id="deadline" name="deadline" value="{{ order.deadline }}" min="2025-01-01" max="2026-12-31" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="category_id" class="form-label">Категория</label>
+            <select class="form-select" id="category_id" name="category_id" required>
+                {% for cat in categories %}
+                    <option value="{{ cat.category_id }}"> {{ cat.name }} </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+        <a href="{{ url_for('orders.order_card', order_id=order.order_id) }}" class="btn btn-secondary">Отмена</a>
+    </form>
+</div>
+{% endblock %}

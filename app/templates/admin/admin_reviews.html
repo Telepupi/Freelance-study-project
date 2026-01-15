@@ -1,0 +1,20 @@
+{% extends "admin/base.html" %}
+
+{% block admin_content %}
+<h3>Отзывы</h3>
+
+{% for r in reviews %}
+<div class="card shadow-sm mb-2">
+  <div class="card-body d-flex justify-content-between">
+    <div>
+      <strong>{{ r.author_id }} --> {{ r.target_id }}</strong>
+      <span class="badge bg-primary">{{ r.rating }}/10</span>
+      <p class="mb-0">{{ r.review_text }}</p>
+    </div>
+    <form method="post" action="{{ url_for('admin.delete_review', review_id=r.review_id) }}">
+      <button class="btn btn-danger btn-sm">Удалить</button>
+    </form>
+  </div>
+</div>
+{% endfor %}
+{% endblock %}

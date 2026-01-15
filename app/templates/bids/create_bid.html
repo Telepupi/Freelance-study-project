@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block p %}
+<div class="hero-content bg-white text-dark p-5 rounded shadow" style="max-width: 600px; margin: auto;">
+    <h2 class="mb-4">Отклик на заказ</h2>
+
+    <form method="POST">
+        <div class="mb-3">
+            <textarea class="form-control" name="bid_text" rows="4" placeholder="Опишите, почему вы подходите для этого задания" required></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="price" class="form-label">Цена (руб.)</label>
+            <input type="number" step="1" class="form-control" id="price" name="price" placeholder="Введите вашу цену" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="deadline" class="form-label">Предельный срок выполнения</label>
+            <input type="date" class="form-control" id="deadline" name="deadline"
+                   min="2025-01-01" max="2026-12-31" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Отправить отклик</button>
+    </form>
+</div>
+{% endblock %}

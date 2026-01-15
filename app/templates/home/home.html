@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block h1 %}
+Добро пожаловать
+{% endblock %}
+
+{% block p %}
+{% if not current_user.is_authenticated %}
+    <p class="fs-5 mb-4">
+        Размещайте заказы на фриланс-платформе.
+        <br>
+        Это просто и быстро.
+    </p>
+
+    <div class="d-flex justify-content-center gap-3">
+        <a href="{{ url_for('auth.registration') }}" class="btn btn-light btn-lg">
+            Начать сейчас
+        </a>
+        <a href="{{ url_for('auth.login') }}" class="btn btn-outline-light btn-lg">
+            Войти
+        </a>
+    </div>
+{% else %}
+    <p class="fs-5 mb-4">
+        Добро пожаловать, <strong>{{ current_user.username }}</strong>
+        <br>
+        Готовы продолжить работу?
+    </p>
+
+    <div class="d-flex justify-content-center gap-3">
+        {%if current_user.role_id == 3%}
+        <a href="{{ url_for('admin.admin_users') }}" class="btn btn-light btn-lg">
+            Панель управления
+        </a>
+        {% else %}
+        <a href="{{ url_for('orders.list_orders') }}" class="btn btn-light btn-lg">
+            Посмотреть заказы
+        </a>
+        <a href="{{ url_for('profile.profile', username=current_user.username) }}"
+           class="btn btn-outline-light btn-lg">
+            Мой профиль
+        </a>
+        {% endif %}
+    </div>
+{% endif %}
+
+{% endblock %}

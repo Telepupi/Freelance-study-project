@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block p %}
+        <div class="hero-content bg-white text-dark p-5 rounded shadow" style="max-width: 500px; margin: auto;">
+            <h2 class="mb-4">Регистрация нового пользователя</h2>
+
+            <form method="POST">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Логин</label>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Введите логин" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="password" class="form-label">Пароль</label>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Введите пароль" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="role" class="form-label">Роль</label>
+                    <select class="form-select" id="role" name="role" required>
+                        <option value="">Выберите роль</option>
+                        <option value="1">Исполнитель</option>
+                        <option value="2">Заказчик</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Зарегистрироваться</button>
+            </form>
+
+            <div class="mt-3 text-center">
+                <a >Уже есть аккаунт? <a href="{{ url_for('auth.login') }}"> Войти </a></a>
+            </div>
+        </div>
+
+{% endblock %}

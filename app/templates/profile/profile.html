@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    {% if profile %}
+    <div class="card shadow-sm rounded-3 mb-4">
+        <div class="card-body d-flex align-items-center">
+            <div>
+                {% if user.role_id == 1 %}
+                    {% if not profile['first_name'] and not profile['last_name'] %}
+                        <h2 class="fw-bold">Не указано</h2>
+                    {% else%}
+                        <h2 class="fw-bold">{{ profile['first_name'] }} {{ profile['last_name'] }}</h2>
+                    {% endif %}
+                        <p class="text-muted mb-1">Роль: Фрилансер</p>
+                    {% if profile['about'] %}
+                        <p class="mb-1" style="max-width: 700px; white-space: pre-wrap; word-break: break-word;">
+                        <strong>О себе:</strong> {{ profile['about'] }}
+                        </p>
+                    {% endif %}
+                    {% if profile['contact_method'] %}
+                        <p class="text-muted mb-0"><strong>Контакты:</strong> {{ profile['contact_method'] }}</p>
+                    {% endif %}
+                {% elif user.role_id == 2 %}
+                    <h2 class="fw-bold">{{ profile['company_name'] or 'Компания не указана' }}</h2>
+                    <p class="text-muted mb-1">Роль: Заказчик</p>
+                    {% if profile['contact_method'] %}
+                        <p class="text-muted mb-0"><strong>Контакты:</strong> {{ profile['contact_method'] }}</p>
+                    {% endif %}
+                {% endif %}
+                    {% if current_user.user_id == user.user_id %}
+                    <a href="{{ url_for('profile.profile_edit', username = current_user.username)}}"
+                    class="btn btn-outline-primary mt-2">
+                    Редактировать профиль
+                    </a>
+                    {%endif%}
+            </div>
+        </div>
+        {% if reviews %}
+        <a href="{{ url_for('reviews.list_reviews', user_id=user.user_id) }}" class="btn btn-outline-primary btn-sm">
+            Смотреть отзывы </a>
+        {%else%}
+
+        <a class="btn btn-outline-primary btn-sm">
+            Пока нет отзывов </a>
+        {% endif %}
+        </div>
+    {% if current_user.user_id == user.user_id %}
+        {% if orders %}
+        <div class="card shadow-sm rounded-3 mt-4">
+            <div class="card-body">
+            <h4 class="fw-bold mb-3">Мои заказы/отклики</h4>
+
+            {% for order in orders %}
+            {%if current_user.role_id == 2%}
+            <div class="border rounded p-3 mb-3">
+                <h4 class="mb-1">{{ order.title }}</h4>
+                <p class="text-muted mb-2" style="white-space: pre-line;">
+                    {{ order.description|truncate(150) }}
+                </p>
+                <div class="d-flex flex-wrap gap-3 mb-2">
+                    <div>
+                        <strong>Бюджет:</strong> {{ order.budget }} ₽
+                    </div>
+                    <div>
+                        <strong>Срок:</strong> {{ order.deadline }}
+                    </div>
+                    <div>
+                        <span class="badge bg-secondary">{{ order.status }}</span>
+                    </div>
+                </div>
+                <a href="{{ url_for('orders.order_card', order_id=order.order_id) }}"
+                   class="btn btn-sm btn-outline-primary">
+                    Открыть заказ
+                </a>
+            </div>
+            {%else%}
+            <div class="border rounded p-3 mb-3">
+                <h5 class="mb-1">{{ order.bid_text }}</h5>
+                <div class="d-flex flex-wrap gap-3 mb-2">
+                    <div>
+                        <strong>Бюджет:</strong> {{ order.price}} ₽
+                    </div>
+                    <div>
+                        <strong>Срок:</strong> {{ order.deadline }}
+                    </div>
+                    <div>
+                        <span class="badge bg-secondary">{{ order.status }}</span>
+                    </div>
+                </div>
+                <a href="{{ url_for('orders.order_card', order_id=order.order_id) }}"
+                   class="btn btn-sm btn-outline-primary">
+                    Открыть заказ
+                </a>
+            </div>
+            {%endif%}
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    {%endif%}
+
+    </div>
+    {% else %}
+        <p>Данные профиля отсутствуют.</p>
+    {% endif %}
+
+</div>
+{% endblock %}

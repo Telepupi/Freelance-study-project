@@ -1,0 +1,18 @@
+{% extends "admin/base.html" %}
+
+{% block admin_content %}
+<h3>Отклики</h3>
+
+{% for b in bids %}
+<div class="card shadow-sm mb-2">
+  <div class="card-body">
+    <strong>Отклик id :{{ b.bid_id }}</strong>
+    <p>{{ b.bid_text }}</p>
+      <p>Отклик к заказу: {{ b.order_id }}</p>
+    <form method="post" action="{{ url_for('admin.delete_bid', bid_id=b.bid_id) }}">
+      <button class="btn btn-danger btn-sm">Удалить</button>
+    </form>
+  </div>
+</div>
+{% endfor %}
+{% endblock %}

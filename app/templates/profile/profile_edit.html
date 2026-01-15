@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block p %}
+        <div class="hero-content bg-white text-dark p-5 rounded shadow" style="max-width: 500px; margin: auto;">
+            <h2 class="mb-4">Изменить данные</h2>
+            <form method="POST">
+                <label class="form-label fw-semibold">Данные для авторизации</label>
+                <div class="mb-3">
+                    <input type="text" class="form-control" name="username" placeholder="изменить логин">
+                </div>
+                <div class="mb-3">
+                    <input type="password" class="form-control" name="password_hash" placeholder="изменить пароль">
+                </div>
+            {% if current_user.role_id == 1%}
+                <label class="form-label fw-semibold">Изменить отображаемое имя</label>
+                <div class="mb-3">
+                    <input type="text" class="form-control" name="first_name" placeholder="изменить имя">
+                </div>
+                <div class="mb-3">
+                    <input type="text" class="form-control" name="last_name" placeholder="изменить фамилию">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">О себе</label>
+                    <textarea class="form-control" name="about" rows=4" placeholder="Расскажите о себе и приложите портфолио"></textarea>
+                </div>
+
+            {% elif current_user.role_id == 2%}
+                <label class="form-label fw-semibold">Изменить название компании</label>
+                <div class="mb-3">
+                    <input type="text" class="form-control" name="company_name" placeholder="изменить название компании">
+                </div>
+            {% endif %}
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Контактная информация</label>
+                    <textarea class="form-control" name="contact_method" rows="2" placeholder="Добавьте контактную информацию, например (Телефон: +79939795003)"></textarea>
+                </div>
+            <button type="submit" class="btn btn-primary w-100">Сохранить</button>
+            </form>
+        </div>
+
+{% endblock %}

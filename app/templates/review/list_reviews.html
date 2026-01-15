@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="mb-4">Отзывы</h2>
+
+    {% if reviews %}
+    <div class="mt-4">
+            <h5>Средний рейтинг:</h5>
+            <span class="badge bg-success fs-5">
+                {{ rating_avg | round(1) }}/10
+            </span>
+        </div>
+        {% for rev in reviews %}
+        <div class="card shadow-sm mb-3">
+            <div class="card-body">
+
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <p class="text mb-0" style="white-space: pre-line; max-width: 100%;">
+                        {{ rev['review_text'] }}
+                    </p>
+
+                    <span class="badge bg-primary fs-6">
+                Рейтинг: {{ rev['rating'] }}/10
+            </span>
+                </div>
+
+            </div>
+        </div>
+        {% endfor %}
+
+
+    {% else %}
+        <p class="text-muted">Отзывы отсутствуют.</p>
+    {% endif %}
+
+</div>
+{% endblock %}

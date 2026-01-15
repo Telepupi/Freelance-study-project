@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block p %}
+        <div class="hero-content bg-white text-dark p-5 rounded shadow" style="max-width: 500px; margin: auto;">
+            <h2 class="mb-4">Авторизация</h2>
+
+            <form method="POST">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Логин</label>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Введите логин" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="password" class="form-label">Пароль</label>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Введите пароль" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Войти</button>
+            </form>
+        </div>
+
+{% endblock %}
